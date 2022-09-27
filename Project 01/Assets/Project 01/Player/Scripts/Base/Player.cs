@@ -58,14 +58,6 @@ namespace Project01
         }
         #endregion
 
-        private void Awake()
-        {
-            if (instantLookAtTargetDestination)
-            {
-                navMeshAgent.angularSpeed = 0f;
-            }
-        }
-
         private void Update()
         {
             PlayerState = navMeshAgent.velocity != Vector3.zero ? PlayerState.Movement : PlayerState.Idle;
