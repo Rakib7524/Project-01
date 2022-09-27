@@ -1,8 +1,6 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.Events;
 
 namespace Project01
 {
@@ -15,105 +13,97 @@ namespace Project01
     public class Player : MonoBehaviour, IInteractable
     {
         [Header("Player References")]
-        [SerializeField] protected NavMeshAgent _navMeshAgent;
-        [SerializeField] private SpriteRenderer _selectionCircle;
+        [SerializeField] protected NavMeshAgent navMeshAgent;
+        [SerializeField] private SpriteRenderer selectionCircle;
 
         [Header("Player configurations")]
-        [SerializeField] protected string _name;
-        [SerializeField] private bool _instantLookAtTargetDestination = false;
+        [SerializeField] protected string playerName;
+        [SerializeField] private bool instantLookAtTargetDestination = false;
 
-        private PlayerState _playerState = PlayerState.Idle;
-        private bool _isSelected;
+        private PlayerState playerState = PlayerState.Idle;
+        private bool isSelected;
 
         #region Properties
-        public string Name
+        public string PlayerName
         {
-            get => _name;
+            get => playerName;
         }
 
         public PlayerState PlayerState
         {
-            get => _playerState;
+            get => playerState;
 
             private set
             {
-                if (_playerState == value)
+                if (playerState == value)
                 {
                     return;
                 }
 
-                _playerState = value;
-                Debug.Log("Player:" + _name + " changed state to: " + _playerState);
+                playerState = value;
+                Debug.Log("Player:" + name + " changed state to: " + playerState);
             }
         }
 
         public bool IsSelected 
         { 
-            get => _isSelected; 
+            get => isSelected;
 
             private set
             {
-                _isSelected = value;
-                _selectionCircle.enabled = _isSelected;
-                Debug.Log("Player: " + _name + (_isSelected ? " is selected." : " was deselected."));
+                isSelected = value;
+                selectionCircle.enabled = isSelected;
+                Debug.Log("Player: " + name + (isSelected ? " is selected." : " was deselected."));
             }
         }
         #endregion
 
         private void Awake()
         {
-            Project01Events.groundLeftClicked += OnGroundLeftClicked;
-            Project01Events.playerLeftClicked += OnPlayerLeftClicked;
-
-            if (_instantLookAtTargetDestination)
+            if (instantLookAtTargetDestination)
             {
-                _navMeshAgent.angularSpeed = 0f;
+                navMeshAgent.angularSpeed = 0f;
             }
         }
 
         private void Update()
         {
-            PlayerState = _navMeshAgent.velocity != Vector3.zero ? PlayerState.Movement : PlayerState.Idle;
+            PlayerState = navMeshAgent.velocity != Vector3.zero ? PlayerState.Movement : PlayerState.Idle;
         }
 
-        private void OnGroundLeftClicked(Vector3 p_groundPosition)
+        public void MoveToTarget(Vector3 p_groundPosition)
         {
-            if (_isSelected)
+            Debug.Log("SetDestination to: " + name);
+
+            if (instantLookAtTargetDestination)
             {
-                Debug.Log("SetDestination to: " + _name);
+                transform.LookAt(p_groundPosition + new Vector3(0f, navMeshAgent.height / 2f, 0f));
 
-                if (_instantLookAtTargetDestination)
+                if (playerState == PlayerState.Movement)
                 {
-                    transform.LookAt(p_groundPosition + new Vector3(0f, _navMeshAgent.height / 2f, 0f));
-
-                    if (_playerState == PlayerState.Movement)
-                    {
-                        _navMeshAgent.SetDestination(transform.position);
-                    }
-                }
-
-                _navMeshAgent.SetDestination(p_groundPosition);
-            }
-        }
-
-        private void OnPlayerLeftClicked(Player p_player)
-        {
-            if (p_player == this)
-            {
-                if (_isSelected)
-                {
-                    DeselectPlayer();
-                }
-                else
-                {
-                    SelectPlayer();
+                    navMeshAgent.destination = p_groundPosition;
+                    navMeshAgent.velocity *= 0.3f;
                 }
             }
+
+            navMeshAgent.SetDestination(p_groundPosition);
         }
 
         public InteractableType GetInteractableType()
         {
             return InteractableType.Player;
+        }
+
+        public void ChangeState()
+        {
+            if (isSelected)
+            {
+                DeselectPlayer();
+            }
+            else
+            {
+                SelectPlayer();
+            }
         }
 
         private void SelectPlayer()
@@ -124,12 +114,6 @@ namespace Project01
         private void DeselectPlayer()
         {
             IsSelected = false;
-        }
-
-        private void OnDestroy()
-        {
-            Project01Events.groundLeftClicked -= OnGroundLeftClicked;
-            Project01Events.playerLeftClicked -= OnPlayerLeftClicked;
         }
     }
 }

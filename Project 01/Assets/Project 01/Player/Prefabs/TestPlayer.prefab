@@ -609,10 +609,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f82a5093a935b06499d99724db520737, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _navMeshAgent: {fileID: 6174900764166643980}
-  _selectionCircle: {fileID: 2383677033579653402}
-  _name: TestPlayer
-  _instantLookAtTargetDestination: 1
+  navMeshAgent: {fileID: 6174900764166643980}
+  selectionCircle: {fileID: 2383677033579653402}
+  playerName: Test player
+  instantLookAtTargetDestination: 1
 --- !u!195 &6174900764166643980
 NavMeshAgent:
   m_ObjectHideFlags: 0
