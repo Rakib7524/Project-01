@@ -7,7 +7,7 @@ namespace Project01
     public enum PlayerState
     {
         Idle,
-        Movement
+        Moving
     }
 
     public class Player : MonoBehaviour, IInteractable
@@ -60,7 +60,7 @@ namespace Project01
 
         private void Update()
         {
-            PlayerState = navMeshAgent.velocity != Vector3.zero ? PlayerState.Movement : PlayerState.Idle;
+            PlayerState = navMeshAgent.velocity != Vector3.zero ? PlayerState.Moving : PlayerState.Idle;
         }
 
         public void MoveToTarget(Vector3 p_groundPosition)
@@ -69,12 +69,16 @@ namespace Project01
 
             if (instantLookAtTargetDestination)
             {
-                transform.LookAt(p_groundPosition + new Vector3(0f, navMeshAgent.height / 2f, 0f));
-
-                if (playerState == PlayerState.Movement)
+                switch (playerState)
                 {
-                    navMeshAgent.destination = p_groundPosition;
-                    navMeshAgent.velocity *= 0.3f;
+                    case PlayerState.Idle:
+                        transform.LookAt(p_groundPosition + new Vector3(0f, navMeshAgent.height / 2f, 0f));
+                        break;
+
+                    case PlayerState.Moving:
+                        navMeshAgent.destination = p_groundPosition;
+                        navMeshAgent.velocity *= 0.3f;
+                        break;
                 }
             }
 

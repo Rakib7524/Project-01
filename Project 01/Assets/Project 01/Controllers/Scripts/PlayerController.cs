@@ -38,19 +38,18 @@ namespace Project01
                         {
                             switch (p_interactable.GetInteractableType())
                             {
-                                case InteractableType.Ground:
-                                    //Debug.Log("Left click on ground.");
-                                    // Check if target is walkable, if true move the player.
-                                    if (player.IsSelected)
-                                    {
-                                        player.MoveToTarget(hit.point);
-                                    }
-                                    break;
-
                                 case InteractableType.Player:
-                                    //Debug.Log("Left click on player.");
                                     player.ChangeState();
                                     break;
+                            }
+                        }
+                        else
+                        {
+                            // Left click on ground or environment.
+                            if (player.IsSelected)
+                            {
+                                // Check if target is walkable, if true move the player.
+                                player.MoveToTarget(hit.point);
                             }
                         }
                     }

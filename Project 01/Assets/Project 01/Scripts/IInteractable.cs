@@ -2,7 +2,6 @@ namespace Project01
 {
     public enum InteractableType
     {
-        Ground,
         Player
     }
 
