@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -65,8 +64,6 @@ namespace Project01
 
         public void MoveToTarget(Vector3 p_groundPosition)
         {
-            Debug.Log("SetDestination to: " + name);
-
             if (instantLookAtTargetDestination)
             {
                 switch (playerState)

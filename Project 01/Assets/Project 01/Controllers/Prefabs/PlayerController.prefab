@@ -175,4 +175,4 @@ MonoBehaviour:
   cameraController: {fileID: 7829792245350399007}
   interactionMask:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 73

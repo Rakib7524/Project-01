@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Project01
 {
@@ -13,6 +14,7 @@ namespace Project01
         private Player player;
         private Ray ray;
         private RaycastHit hit;
+        private NavMeshHit navMeshHit;
 
         #region Properties
         public Player Player { get => player; }
@@ -48,8 +50,14 @@ namespace Project01
                             // Left click on ground or environment.
                             if (player.IsSelected)
                             {
-                                // Check if target is walkable, if true move the player.
-                                player.MoveToTarget(hit.point);
+                                if (NavMesh.SamplePosition(hit.point, out navMeshHit, 0.1f, NavMesh.AllAreas))
+                                {
+                                    player.MoveToTarget(navMeshHit.position);
+                                }
+                                else
+                                {
+                                    Debug.Log("Inaccessible  area.");
+                                }
                             }
                         }
                     }
